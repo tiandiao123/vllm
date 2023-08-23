@@ -1,7 +1,6 @@
 #include <torch/extension.h>
 #include <ATen/cuda/CUDAContext.h>
 
-namespace vllm {
 
 template<typename scalar_t>
 __global__ void rotary_embedding_neox_kernel(
@@ -49,7 +48,6 @@ __global__ void rotary_embedding_neox_kernel(
   }
 }
 
-} // namespace vllm
 
 void rotary_embedding_neox(
   torch::Tensor& positions,         // [num_tokens]
@@ -74,7 +72,7 @@ void rotary_embedding_neox(
     query.scalar_type(),
     "rotary_embedding_neox",
     [&] {
-      vllm::rotary_embedding_neox_kernel<scalar_t><<<grid, block, 0, stream>>>(
+      rotary_embedding_neox_kernel<scalar_t><<<grid, block, 0, stream>>>(
         positions.data_ptr<int64_t>(),
         query.data_ptr<scalar_t>(),
         key.data_ptr<scalar_t>(),

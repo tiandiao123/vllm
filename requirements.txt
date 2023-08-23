@@ -1,9 +1,0 @@
-ninja  # For faster builds.
-psutil
-ray >= 2.5.1
-sentencepiece  # Required for LLaMA tokenizer.
-numpy
-transformers >= 4.31.0  # Required for LLaMA-2.
-fastapi
-uvicorn
-pydantic < 2  # Required for OpenAI server.
