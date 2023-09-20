@@ -15,6 +15,12 @@ from setuptools import setup
 from torch.utils.cpp_extension import BuildExtension, CUDAExtension, CUDA_HOME
 from torch.utils import cpp_extension
 
+# Compiler flags.
+CXX_FLAGS = ["-g", "-O2", "-std=c++17"]
+# TODO(woosuk): Should we use -O3?
+NVCC_FLAGS = ["-O2", "-std=c++17"]
+
+
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
@@ -143,6 +149,32 @@ setup(
                 Path(this_dir) / 'csrc' / 'layernorm',
             ],
         ),
+        
+
+
+        CUDAExtension(
+        name="vllm.activation_ops",
+        sources=["csrc/activation/activation.cpp", "csrc/activation/activation_kernels.cu"],
+        extra_compile_args={"cxx": CXX_FLAGS, "nvcc": NVCC_FLAGS},
+
+    ),
+
+        CUDAExtension(
+        name="vllm.cache_ops",
+        sources=["csrc/cache/cache.cpp", "csrc/cache/cache_kernels.cu"],
+        extra_compile_args={"cxx": CXX_FLAGS, "nvcc": NVCC_FLAGS},
+    ),
+
+        CUDAExtension(
+        name="vllm.attention_ops",
+        sources=["csrc/attention.cpp", "csrc/attention/attention_kernels.cu"],
+        extra_compile_args={"cxx": CXX_FLAGS, "nvcc": NVCC_FLAGS},
+    ),
+        CUDAExtension(
+        name="vllm.pos_encoding_ops",
+        sources=["csrc/pos_encoding/pos_encoding.cpp", "csrc/pos_encoding/pos_encoding_kernels.cu"],
+        extra_compile_args={"cxx": CXX_FLAGS, "nvcc": NVCC_FLAGS},
+    )
 
     ],
     cmdclass={
